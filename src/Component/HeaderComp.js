@@ -1,14 +1,43 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "../main.css";
 import { MdMenu } from "react-icons/md";
 import { Link } from "react-router-dom";
 const HeaderComp = () => {
   const [show, setShow] = useState(false);
   const [selectedOption, setSelectedOption] = useState("option1");
-
+  const triggerRef = useRef(null); // optional
+  const nodeRef = useRef(null); // required
   const handleOptionChange = (event) => {
     setSelectedOption(event.target.value);
   };
+  const handleClickOutside = (event) => {
+    //if click is on trigger element, toggle modal
+    if (triggerRef.current && triggerRef.current.contains(event.target)) {
+      return setShow(!show);
+    }
+    if (nodeRef.current && !nodeRef.current.contains(event.target)) {
+      return setShow(false);
+    }
+  };
+  useEffect(() => {
+    document.addEventListener("click", handleClickOutside, true);
+    return () => {
+      document.removeEventListener("click", handleClickOutside, true);
+    };
+  }, []);
+  //      useEffect(() => {
+  //       document.addEventListener("click", handleClickOutside, true);
+  //       return () => {
+  //       document.removeEventListener("click", handleClickOutside, true);
+  //      };
+  //     });
+  //  return {
+  //     triggerRef,
+  //     nodeRef,
+  //     show,
+  //     setShow
+  //     }
+  //   }
   return (
     <div className="headerStyle">
       <Link to="/">
